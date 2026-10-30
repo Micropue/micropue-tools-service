@@ -1,0 +1,305 @@
+@use './profile-section.scss';
+
+html {
+  font-size: 13px;
+  height: 100%;
+}
+
+html,
+body,
+#__nuxt {
+  height: 100%;
+}
+
+@font-face {
+  font-family: 'Dancing Script';
+  src: url('../fonts/DancingScript-VariableFont_wght.ttf');
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/Montserrat-VariableFont_wght.ttf');
+  font-weight: 100 900;
+}
+
+body {
+  margin: 0;
+  background: var(--p-content-background);
+  color: var(--p-text-color);
+  font-family: 'Montserrat';
+  height: 100%;
+}
+
+// LOGO 表现：浅色主题 = 白底 + 品牌原色；深色主题 = 深色面板 + 反白单色
+// 深色下白色/浅灰底座都很刺眼；反白后深色品牌 LOGO（Next.js、COBOL 等）也不会看不见
+:root {
+  --logo-plate: #ffffff;
+  --logo-tint: none;
+  --logo-ink: #18181b;
+  /* macOS 用 Menlo，Windows 用 Consolas；均为系统内置，按字体是否存在自动切换 */
+  --font-code: Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --logo-plate: #1f1f23;
+    --logo-tint: brightness(0) invert(1);
+    --logo-ink: var(--p-text-color);
+  }
+}
+
+// 控制台（/dashboard）：大背景 + 卡片块。浅色为浅灰底 + 白卡，深色为近黑底 + 抬升面板
+:root {
+  --dash-bg: #f4f4f5;
+  --dash-card: #ffffff;
+  --dash-border: color-mix(in srgb, var(--p-text-color) 12%, transparent);
+  --dash-hover: color-mix(in srgb, var(--p-text-color) 6%, transparent);
+  --dash-active: color-mix(in srgb, var(--p-text-color) 11%, transparent);
+  /* 不透明版本：用于冻结列等"下面有内容会透出来"的地方（color-mix 叠在卡片底色上） */
+  --dash-head: color-mix(in srgb, var(--p-text-color) 6%, var(--dash-card));
+  --dash-hover-solid: color-mix(in srgb, var(--p-text-color) 8%, var(--dash-card));
+  --dash-active-solid: color-mix(in srgb, var(--p-text-color) 13%, var(--dash-card));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --dash-bg: #09090b;
+    --dash-card: #1f1f23;
+  }
+}
+
+// RotatingText 依赖的少量工具类（项目未引入 Tailwind，只补必需项）
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.rotating-chip {
+  display: flex;
+  overflow: hidden;
+  padding: 0 0.3em;
+  border-radius: 0.5rem;
+  background: var(--p-text-color);
+  color: var(--p-primary-contrast-color);
+}
+
+.rotating-chip .rt-split {
+  display: inline-flex;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+::-webkit-scrollbar{
+  display: none;
+}
+
+/* ===== 目录指令框（主页 hero 与全站浮层共用） ===== */
+.command-palette {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  max-height: min(22rem, 60vh);
+  overflow-y: auto;
+  padding: 0.35rem;
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 0.75rem;
+  background: var(--p-content-background);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.35);
+}
+
+/* 浮层里列表是对话框的一部分，不再绝对定位 */
+.command-palette--static {
+  position: static;
+  max-height: min(26rem, 60vh);
+  border: 0;
+  border-top: 1px solid var(--p-content-border-color);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.command-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &.is-active {
+    background: color-mix(in srgb, var(--p-primary-color) 14%, transparent);
+  }
+}
+
+.command-logo {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* 选定指令后的彩色标记（未选指令时不存在，斜杠在输入框里） */
+.command-prefix {
+  flex-shrink: 0;
+  padding: 0.05rem 0.45rem;
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--p-primary-color) 14%, transparent);
+  color: var(--p-primary-color);
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 600;
+  user-select: none;
+}
+
+.command-name {
+  font-size: 0.95rem;
+
+  &--cmd {
+    font-family: var(--font-code);
+    font-weight: 600;
+  }
+}
+
+.command-alias {
+  font-family: var(--font-code);
+  font-size: 0.76rem;
+  color: var(--p-text-muted-color);
+}
+
+.command-sub {
+  font-size: 0.76rem;
+  color: var(--p-text-muted-color);
+}
+
+.command-desc,
+.command-kind {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--p-text-muted-color);
+}
+
+.command-empty {
+  margin: 0;
+  padding: 0.55rem 0.6rem;
+  font-size: 0.85rem;
+  color: var(--p-text-muted-color);
+}
+
+.command-foot {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 0.1rem;
+  padding: 0.4rem 0.6rem 0.15rem;
+  border-top: 1px solid var(--p-content-border-color);
+  font-size: 0.72rem;
+  color: var(--p-text-muted-color);
+
+  kbd {
+    margin-right: 0.15rem;
+    padding: 0 0.25rem;
+    border: 1px solid var(--p-content-border-color);
+    border-radius: 0.25rem;
+    font: inherit;
+    font-size: 0.7rem;
+  }
+}
+
+/* 全站浮层 */
+.command-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12vh 1rem 1rem;
+  background: color-mix(in srgb, #000 32%, transparent);
+}
+
+.command-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 100%);
+  max-height: min(32rem, 80vh);
+  overflow: hidden;
+  border: 1px solid var(--p-content-border-color);
+  border-radius: 0.9rem;
+  background: var(--p-content-background);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.5);
+}
+
+.command-field {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.9rem 1rem;
+}
+
+.command-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.command-fade-enter-active,
+.command-fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.command-fade-enter-from,
+.command-fade-leave-to {
+  opacity: 0;
+}
+
+
+/* ===== 代码高亮（首页代码墙 / 代码段详情共用） ===== */
+.code-highlight {
+  --tok-kw: #a626a4;
+  --tok-str: #50a14f;
+  --tok-num: #986801;
+  --tok-com: #a0a1a7;
+  --tok-fn: #4078f2;
+  --tok-type: #c18401;
+  --tok-punc: #7a7f87;
+
+  .tok-kw { color: var(--tok-kw); }
+  .tok-str { color: var(--tok-str); }
+  .tok-num { color: var(--tok-num); }
+  .tok-com { color: var(--tok-com); font-style: italic; }
+  .tok-fn { color: var(--tok-fn); }
+  .tok-type { color: var(--tok-type); }
+  .tok-punc { color: var(--tok-punc); }
+}
+
+@media (prefers-color-scheme: dark) {
+  .code-highlight {
+    --tok-kw: #c678dd;
+    --tok-str: #98c379;
+    --tok-num: #d19a66;
+    --tok-com: #7f848e;
+    --tok-fn: #61afef;
+    --tok-type: #e5c07b;
+    --tok-punc: #8b909a;
+  }
+}

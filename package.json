@@ -1,0 +1,24 @@
+{
+  "name": "tools-micropue-com-cn",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@primeuix/themes": "^2.0.3",
+    "@primevue/nuxt-module": "^4.5.5",
+    "nuxt": "^4.6.3",
+    "primeicons": "^8.0.2",
+    "primevue": "^4.5.5",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0"
+  },
+  "devDependencies": {
+    "sass-embedded": "^1.107.0"
+  }
+}
