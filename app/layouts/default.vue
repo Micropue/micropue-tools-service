@@ -10,9 +10,9 @@
 
       <div class="nav-actions">
         <Button as="a" class="github-link" severity="secondary" rounded :href="githubUrl" target="_blank"
-          rel="noopener noreferrer" aria-label="GitHub">
+          rel="noopener noreferrer">
           <i class="pi pi-github" aria-hidden="true" />
-          <span>GitHub</span>
+          <span>{{ starLabel }}</span>
         </Button>
       </div>
     </nav>
@@ -24,7 +24,15 @@
 </template>
 
 <script setup lang="ts">
-const githubUrl = 'https://github.com/Micropue'
+const githubUrl = 'https://github.com/Micropue/micropue-tools-service'
+
+const { data } = await useFetch<{ stars: number | null }>('/api/github/star')
+
+// 拿不到星数时退回仓库名文案，避免按钮只剩一个图标
+const starLabel = computed(() =>
+  data.value?.stars == null
+    ? 'GitHub'
+    : `${new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(data.value.stars)} Stars`)
 </script>
 
 <style lang="scss" scoped>
