@@ -33,6 +33,6 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           source: ".output/*"
-          target: "/sdb/"
+          target: "/sdb/micropue-tools"
           strip_components: 1
           rm: true
