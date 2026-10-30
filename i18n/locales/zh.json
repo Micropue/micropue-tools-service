@@ -1,0 +1,17 @@
+{
+  "header": {
+    "home": "MICROPUE Tools 首页",
+    "stars": {
+      "other": "{count} 星标"
+    },
+    "language": "语言",
+    "performance": "高性能模式",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单"
+  },
+  "error": {
+    "notFound": "页面不存在",
+    "generic": "出了点问题",
+    "backHome": "返回首页"
+  }
+}

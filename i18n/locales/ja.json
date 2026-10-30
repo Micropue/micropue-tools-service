@@ -1,0 +1,17 @@
+{
+  "header": {
+    "home": "MICROPUE Tools ホーム",
+    "stars": {
+      "other": "{count} スター"
+    },
+    "language": "言語",
+    "performance": "パフォーマンスモード",
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる"
+  },
+  "error": {
+    "notFound": "ページが見つかりません",
+    "generic": "問題が発生しました",
+    "backHome": "ホームに戻る"
+  }
+}

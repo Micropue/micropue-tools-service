@@ -1,9 +1,9 @@
 <template>
   <NuxtLayout>
     <div class="error-page">
-      <p class="error-code">{{ error?.statusCode ?? 500 }}</p>
-      <h1 class="error-message">{{ error?.statusMessage || 'Something went wrong' }}</h1>
-      <Button label="Back to Home" @click="handleBack" />
+      <p class="error-code">{{ statusCode }}</p>
+      <h1 class="error-message">{{ message }}</h1>
+      <Button :label="t('error.backHome')" @click="handleBack" />
     </div>
   </NuxtLayout>
 </template>
@@ -13,12 +13,21 @@ import type { NuxtError } from '#app'
 
 const props = defineProps<{ error: NuxtError }>()
 
+const { t } = useI18n()
+const localePath = useLocalePath()
+
+const statusCode = computed(() => props.error?.statusCode ?? 500)
+const message = computed(() =>
+  statusCode.value === 404
+    ? t('error.notFound')
+    : props.error?.statusMessage || t('error.generic'))
+
 useHead({
-  title: computed(() => `${props.error?.statusCode ?? 500} | Tools`)
+  title: computed(() => `${statusCode.value} | Tools`)
 })
 
 function handleBack() {
-  clearError({ redirect: '/' })
+  clearError({ redirect: localePath('/') })
 }
 </script>
 
