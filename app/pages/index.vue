@@ -1,6 +1,30 @@
 <script setup lang="ts">
 const appReady = useState('app-ready', () => false)
 const perf = usePerformanceMode()
+const { t } = useI18n()
+const localePath = useLocalePath()
+const config = useRuntimeConfig()
+const siteUrl = String(config.public.siteUrl).replace(/\/+$/, '')
+
+useHead(() => ({
+  title: 'MICROPUE Tools',
+  meta: [
+    { name: 'description', content: `${t('home.tagline1')} ${t('home.tagline2')}` },
+    { property: 'og:title', content: 'MICROPUE Tools' },
+    { property: 'og:description', content: `${t('home.tagline1')} ${t('home.tagline2')}` },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: `${siteUrl}${localePath('/')}` }
+  ],
+  link: [
+    { rel: 'canonical', href: `${siteUrl}${localePath('/')}` },
+    ...['', '/zh', '/ja', '/ru'].map(prefix => ({
+      rel: 'alternate',
+      hreflang: prefix === '' ? 'en' : prefix.slice(1),
+      href: prefix === '' ? `${siteUrl}/` : `${siteUrl}${prefix}`
+    })),
+    { rel: 'alternate', hreflang: 'x-default', href: `${siteUrl}/` }
+  ]
+}))
 
 const seed = () => Math.random().toString(36).slice(2, 10)
 const items = useState('home-photos', () =>
@@ -87,10 +111,17 @@ onBeforeUnmount(() => {
 
     <div class="scrim" aria-hidden="true" />
 
+    <div class="topbar">
+      <NuxtLink :to="localePath('/tools')" class="home-button" :aria-label="t('tools.title')">
+        <i class="pi pi-home" aria-hidden="true" />
+      </NuxtLink>
+      <ToolSearch />
+    </div>
+
     <div ref="copyRef" class="hero-copy">
       <h1 class="title">TOOLS</h1>
-      <p class="tagline">Small, sharp tools for everyday work.</p>
-      <p class="tagline">Built by MICROPUE, free to use.</p>
+      <p class="tagline">{{ t('home.tagline1') }}</p>
+      <p class="tagline">{{ t('home.tagline2') }}</p>
     </div>
   </section>
 </template>
@@ -106,6 +137,49 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: 0;
   z-index: 0;
+}
+
+.topbar {
+  position: absolute;
+  top: clamp(14px, 3vh, 28px);
+  left: clamp(20px, 4vw, 56px);
+  right: 96px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, var(--p-text-color) 18%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--p-content-background) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--p-text-color);
+  text-decoration: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.home-button:hover,
+.home-button:focus-visible {
+  border-color: color-mix(in srgb, var(--p-text-color) 38%, transparent);
+  background: color-mix(in srgb, var(--p-content-background) 94%, transparent);
+}
+
+.home-button .pi {
+  font-size: 0.95rem;
+}
+
+@media screen and (max-width: 700px) {
+  .topbar {
+    right: 70px;
+  }
 }
 
 /* 文字可读性渐变 */
@@ -139,7 +213,7 @@ onBeforeUnmount(() => {
   font-size: clamp(64px, 13vw, 220px);
   font-weight: 800;
   line-height: 0.9;
-  letter-spacing: -0.045em;
+  letter-spacing: 0.02em;
   color: var(--p-text-color);
 }
 

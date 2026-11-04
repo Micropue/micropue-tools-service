@@ -33,7 +33,13 @@ export default defineNuxtConfig({
     ]
   },
 
-  css: ['primeicons/primeicons.css', '~/assets/css/main.scss'],
+  css: ['primeicons/primeicons.css', '~/assets/css/main.scss', '~/assets/css/tools.scss'],
+
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://tools.micropue.com.cn'
+    }
+  },
 
   primevue: {
     options: { ripple: false },
