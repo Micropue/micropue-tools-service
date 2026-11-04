@@ -1,90 +1,111 @@
-# Nuxt + PrimeVue 4
+# MICROPUE Tools
 
-Nuxt 4 site with [PrimeVue 4](https://primevue.org) wired up via `@primevue/nuxt-module`.
-Components are auto-registered globally — no imports needed.
+[micropue 工具箱](https://tools.micropue.com.cn) 的站点源码：Nuxt 4 + PrimeVue 4，黑白（Noir）主题、多语言、右侧纵向导航。
 
-Theme is the black/white **Noir** preset in `app/assets/themes/noir.ts` (Aura with `primary` mapped to the `zinc` scale), loaded via `importTheme` in `nuxt.config.ts`. Dark scheme follows the OS by default.
+> 部署相关的服务器地址、进程与 Nginx 配置放在本地 `DEPLOY.md`（已在 `.gitignore` 中，不随仓库推送）。
 
-Global styles are copied from the BITS project: `app/assets/css/main.scss` (13px root, Montserrat + Dancing Script fonts, command-palette / code-highlight / dashboard helpers) and `profile-section.scss`.
+## 技术栈
 
-PrimeVue docs are available to agents as a project skill: `.opencode/skills/primevue/SKILL.md` (`primevue-docs.txt` is the full official doc dump; grep it, don't read it whole).
+- **Nuxt 4.6** / Vue 3.5 / vue-router 5
+- **PrimeVue 4.5** + `@primevue/nuxt-module`，主题基于 `@primeuix/themes`（Aura → Noir）
+- **@nuxtjs/i18n 10**：英语 / 中文 / 日语 / 俄语
+- **ogl**（WebGL）：FlexCarousel、RippleDistortion
+- **GSAP 3.15 + SplitText**：首页标题逐词遮罩动画
+- **SCSS**（sass-embedded）
 
-The header also has a performance switch (`usePerformanceMode()`, `micropue-perf` cookie): off unmounts the homepage photo-wall carousel entirely, leaving the plain background and the tool stack. Header (`app/layouts/default.vue`) mirrors the BITS top bar (MICROPUE Tools wordmark + GitHub pill, no login) but is a fixed overlay: content runs underneath and the bar's backdrop is the Vue Bits `GradualBlur` component (`app/components/GradualBlur.vue`, blur strongest at the top, fading down) plus a faint theme-coloured scrim for text contrast. All HTTP errors render through `app/error.vue` (big status code + message + Back to Home).
+## 功能
 
-i18n (`@nuxtjs/i18n`): English is unprefixed (`/`), the others live at `/zh`, `/ja`, `/ru`. Strings are in `i18n/locales/<code>.json` (`file` must be set on each locale in `nuxt.config.ts`). Selecting a locale stores it in the `micropue-locale` cookie, and `app/middleware/locale.global.ts` sends `/` back to that locale; without a cookie `/` is always English (no browser-language redirect). `useLocaleSwitch()` (auto-imported) changes locale + cookie; the header uses it for the language dropdown left of the GitHub pill.
+- **右侧纵向导航**：旋转 90° 的 `MICROPUE Tools` 字标、语言弹出菜单、GitHub 星数、性能模式开关；≤700px 收起为右上角抽屉按钮。
+- **首页**：FlexCarousel 照片背景（自动轮播、随机图、鼠标跟随透镜）+ 左下角 TOOLS 文案（SplitText `mask: "words"` 逐词升起）+ 字体就绪前的全屏加载蒙层。
+- **性能模式**：开关写入 cookie `micropue-perf`，关闭后卸载照片墙（释放 WebGL），刷新保持。
+- **多语言**：`/` 默认英文，`/zh`、`/ja`、`/ru`；语言选择写入 cookie `micropue-locale`，再次访问 `/` 会回到上次语言。
+- **错误页**：`app/error.vue` 统一处理所有 HTTP 错误码。
+- **黑白主题**：`app/assets/themes/noir.ts`，跟随系统深浅色。
 
-Homepage foreground is `app/components/ToolStack.client.vue`: 30 random tools (`app/data/tools.ts`) as a square card deck, rising in after the carousel intro. Wheel (anywhere) and drag rotate it endlessly both ways; only the card edges take pointer events so the carousel behind keeps hover/drag. Background hero is the Vue Bits `FlexCarousel` (`app/components/FlexCarousel.vue`, WebGL via `ogl`). The original Tailwind classes were ported to plain CSS in the same file (no Tailwind in this project). Props are configured in `app/pages/index.vue`; images are random `picsum.photos` placeholders (12 per load, a new set on every refresh) until real assets are added.
+## 目录结构
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+```
+app/
+  app.vue                     # NuxtLayout + NuxtPage + html lang
+  error.vue                   # 全站错误页
+  layouts/default.vue         # 右侧纵向导航、加载蒙层
+  pages/index.vue             # 首页（照片墙背景 + TOOLS 文案）
+  components/
+    FlexCarousel.vue          # 照片墙（Vue Bits 组件，Tailwind 已改为本地 CSS）
+    RippleDistortion.vue      # 水波纹（当前未使用，保留）
+    ToolStack.client.vue      # 工具卡片栈（当前未使用，保留）
+    OptionWheel.vue           # 滚轮选择器（当前未使用，保留）
+    GradualBlur.vue           # 顶部/侧边渐变模糊（导航背景）
+  assets/
+    css/main.scss             # 全局样式（13px 基准字号、字体、工具类）
+    fonts/                    # Montserrat / Dancing Script
+    themes/noir.ts            # 黑白主题
+  composables/
+    useLocaleSwitch.ts        # 切换语言 + 写 cookie
+    usePerformanceMode.ts     # 性能模式 cookie
+  middleware/locale.global.ts # 访问 / 时按 cookie 跳回上次语言
+  utils/locale.ts             # 语言 cookie
+  data/tools.ts               # 工具假数据
+i18n/locales/{en,zh,ja,ru}.json
+server/api/github/star.get.ts # GitHub 星数（1 小时缓存）
+public/
+  sounds/click-soft.wav       # 点击音效（当前未使用）
+```
 
-## Setup
+## 环境要求
 
-Make sure to install dependencies:
+- **Node.js**：推荐 24 LTS（Nuxt 4.6 要求 `^22.21 || ^24.11 || >=26`；22.17 会有 unsupported 警告但可运行）
+- **pnpm**：10.x（仓库带 `pnpm-lock.yaml`）
+
+## 本地开发
 
 ```bash
-# npm
-npm install
-
-# pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+pnpm dev          # http://localhost:3501（nuxt.config 中 devServer.port=3501，host=0.0.0.0）
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## 构建
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+pnpm build        # 输出到 .output/
+pnpm start        # node .output/server/index.mjs
+pnpm preview      # 本地预览构建产物
 ```
 
-## Production
+## 国际化
 
-Build the application for production:
+- 语言文件在 `i18n/locales/<code>.json`，新增语言时在 `nuxt.config.ts` 的 `i18n.locales` 里添加 `{ code, language, name, file }`（`file` 必填）。
+- 默认英文不带前缀；其他语言走 `/<code>`。
+- 切换语言用 `useLocaleSwitch()`（自动写 `micropue-locale` cookie 并跳转）。
+- 不在首次访问时按浏览器语言跳转，`/` 对未选择过语言的访客固定英文。
 
-```bash
-# npm
-npm run build
+## Cookie
 
-# pnpm
-pnpm build
+| 名称 | 用途 | 有效期 |
+| --- | --- | --- |
+| `micropue-locale` | 记住语言选择 | 1 年 |
+| `micropue-perf` | 性能模式（是否加载照片墙背景） | 1 年 |
 
-# yarn
-yarn build
+## 主题
 
-# bun
-bun run build
+`app/assets/themes/noir.ts` 基于 Aura，把 `primary` 映射到 `zinc` 灰阶，并改写 ProgressSpinner 的渐变。通过 `nuxt.config.ts` 的 `importTheme` 引入：
+
+```ts
+primevue: {
+  importTheme: { from: '~/assets/themes/noir', as: 'NoirTheme' }
+}
 ```
 
-Locally preview production build:
+注意该模块要求主题文件默认导出 `{ preset }` 形式的 theme 配置（而不是裸 preset），否则样式会渲染成 `undefined`。
 
-```bash
-# npm
-npm run preview
+## 外部依赖 / 资源
 
-# pnpm
-pnpm preview
+- **图片**：首页照片来自 `picsum.photos`（随机占位图），正式上线建议换成本地 `public/` 资源或自有图床。
+- **GitHub 星数**：`/api/github/star` 请求 `api.github.com`，`defineCachedEventHandler` 缓存 1 小时（未认证接口限 60 次/小时）；失败时导航显示 "GitHub"。
+- **字体**：Montserrat、Dancing Script 随仓库放在 `app/assets/fonts/`。
 
-# yarn
-yarn preview
+## 备注
 
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- 首页当前只展示 TOOLS 文案与照片墙；卡片栈、OptionWheel、RippleDistortion 等组件保留在仓库里，未挂载。
+- PrimeVue 在开发模式下偶发 hydration mismatch 警告（组件生成 ID 导致），不影响生产显示。
+- 仓库未包含部署脚本与服务器信息，部署说明见本地 `DEPLOY.md`。

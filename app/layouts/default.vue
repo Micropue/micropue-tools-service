@@ -1,4 +1,10 @@
 <template>
+  <Transition name="page-loader">
+    <div v-if="!booted" class="page-loader" role="status" aria-live="polite" :aria-label="t('common.loading')">
+      <ProgressSpinner />
+    </div>
+  </Transition>
+
   <header class="site-header" :class="{ 'is-open': menuOpen }">
     <GradualBlur
       position="right"
@@ -70,8 +76,24 @@ const githubUrl = 'https://github.com/Micropue/micropue-tools-service'
 const { t, locale, locales } = useI18n()
 const localePath = useLocalePath()
 const switchLocale = useLocaleSwitch()
-const perf = usePerformanceMode()
 const menuOpen = ref(false)
+const perf = usePerformanceMode()
+
+// 字体就绪前盖住整页，避免 Montserrat / Dancing Script 晚加载导致文字闪动
+const booted = ref(false)
+const appReady = useState('app-ready', () => false)
+
+onMounted(async () => {
+  const fontsReady = 'fonts' in document ? document.fonts.ready : Promise.resolve()
+  const minDelay = new Promise(resolve => setTimeout(resolve, 200))
+  const timeout = new Promise(resolve => setTimeout(resolve, 3500))
+  await Promise.race([Promise.all([fontsReady, minDelay]), timeout])
+  booted.value = true
+  // 蒙层淡出（400ms）结束后再放行首页动效
+  setTimeout(() => {
+    appReady.value = true
+  }, 450)
+})
 
 const langMenu = ref<{ toggle: (event: Event) => void } | null>(null)
 
@@ -101,6 +123,34 @@ const starLabel = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--p-content-background);
+}
+
+.page-loader :deep(.p-progressspinner) {
+  width: 44px;
+  height: 44px;
+}
+
+.page-loader-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.page-loader-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-loader-leave-active {
+    transition: none;
+  }
+}
+
 .site-header {
   // 右侧纵向工具条：浮在内容之上，模糊层从右向左淡出
   position: fixed;

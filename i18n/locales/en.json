@@ -6,13 +6,16 @@
       "other": "{count} Stars"
     },
     "language": "Language",
-    "performance": "Performance mode",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "performance": "Performance mode"
   },
   "error": {
     "notFound": "Page not found",
     "generic": "Something went wrong",
     "backHome": "Back to Home"
+  },
+  "common": {
+    "loading": "Loading"
   }
 }

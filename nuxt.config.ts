@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     importTheme: { from: '~/assets/themes/noir', as: 'NoirTheme' }
   },
   devServer:{
-    port: 3501
+    port: 3501,
+    host:"0.0.0.0"
   }
 })

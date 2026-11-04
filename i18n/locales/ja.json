@@ -5,13 +5,16 @@
       "other": "{count} スター"
     },
     "language": "言語",
-    "performance": "パフォーマンスモード",
     "openMenu": "メニューを開く",
-    "closeMenu": "メニューを閉じる"
+    "closeMenu": "メニューを閉じる",
+    "performance": "パフォーマンスモード"
   },
   "error": {
     "notFound": "ページが見つかりません",
     "generic": "問題が発生しました",
     "backHome": "ホームに戻る"
+  },
+  "common": {
+    "loading": "読み込み中"
   }
 }

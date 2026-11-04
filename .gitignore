@@ -25,3 +25,6 @@ logs
 
 # Playwright MCP artifacts
 .playwright-mcp
+
+# Local deployment notes (never push)
+DEPLOY.md

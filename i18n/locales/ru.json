@@ -8,13 +8,16 @@
       "other": "{count} звезды"
     },
     "language": "Язык",
-    "performance": "Режим производительности",
     "openMenu": "Открыть меню",
-    "closeMenu": "Закрыть меню"
+    "closeMenu": "Закрыть меню",
+    "performance": "Режим производительности"
   },
   "error": {
     "notFound": "Страница не найдена",
     "generic": "Что-то пошло не так",
     "backHome": "На главную"
+  },
+  "common": {
+    "loading": "Загрузка"
   }
 }
