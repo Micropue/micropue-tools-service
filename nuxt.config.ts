@@ -25,6 +25,11 @@ export default defineNuxtConfig({
     // 黑白主题：app/assets/themes/noir.ts
     importTheme: { from: '~/assets/themes/noir', as: 'NoirTheme' }
   },
+  // 打包所有服务端依赖，产物自包含（CI 上传时不会因 node_modules 符号链接丢失而崩溃）
+  nitro: {
+    noExternals: true
+  },
+
   devServer:{
     port: 3501,
     host:"0.0.0.0"
