@@ -3,6 +3,21 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  app: {
+    head: {
+      title: 'MICROPUE Tools',
+      meta: [
+        { name: 'description', content: 'Small, sharp tools for everyday work.' },
+        { name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' },
+        { name: 'theme-color', content: '#18181b', media: '(prefers-color-scheme: dark)' }
+      ],
+      link: [
+        { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
+      ]
+    }
+  },
+
   modules: ['@primevue/nuxt-module', '@nuxtjs/i18n'],
 
   i18n: {
