@@ -97,18 +97,19 @@
   "wheel": {
     "entries": "Entries",
     "placeholder": "One entry per line",
-    "hint": "2–24 entries recommended. Each spin picks one entry at random.",
+    "hint": "Supports 2–500 entries. Large lists are drawn as thin slices; the winner is always chosen from the full list.",
     "spin": "Spin",
     "spinning": "Spinning…",
     "result": "Winner",
     "reset": "Reset",
     "count": "{count} entries",
     "empty": "Add at least 2 entries to spin.",
-    "tooMany": "Up to 24 entries are supported.",
+    "tooMany": "Up to 500 entries are supported.",
     "emptyShort": "Add entries",
     "pick": "The winner is selected locally with crypto.getRandomValues.",
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit fullscreen",
-    "cached": "Entries are saved in this browser."
+    "cached": "Entries are saved in this browser.",
+    "dense": "Large list: only a sample of labels is shown on the wheel."
   }
 }

@@ -27,8 +27,9 @@ const entries = computed(() =>
 )
 
 const COLORS = ['#dc2626', '#ea580c', '#ca8a04', '#65a30d', '#16a34a', '#0d9488', '#0891b2', '#2563eb', '#4f46e5', '#7c3aed', '#9333ea', '#db2777']
-const MAX_ENTRIES = 24
+const MAX_ENTRIES = 500
 const SIZE = 820
+let wheelCache: HTMLCanvasElement | null = null
 
 function labelColor(hex: string) {
   const value = hex.replace('#', '')
@@ -43,6 +44,69 @@ function fitLabel(ctx: CanvasRenderingContext2D, label: string, maxWidth: number
   const chars = [...label]
   while (chars.length > 1 && ctx.measureText(`${chars.join('')}…`).width > maxWidth) chars.pop()
   return `${chars.join('')}…`
+}
+
+function buildWheelCache() {
+  const items = entries.value
+  if (!items.length) {
+    wheelCache = null
+    return
+  }
+
+  const cache = document.createElement('canvas')
+  cache.width = SIZE
+  cache.height = SIZE
+  const ctx = cache.getContext('2d')
+  if (!ctx) return
+
+  const cx = SIZE / 2
+  const cy = SIZE / 2
+  const radius = SIZE * 0.43
+  const segment = (Math.PI * 2) / items.length
+  const fontSize = items.length <= 40
+    ? Math.min(52, Math.max(30, 64 - items.length * 1.4))
+    : 28
+  const maxLabelWidth = radius - 100
+  const labelStep = items.length <= 40 ? 1 : Math.ceil(items.length / 24)
+  const lineWidth = items.length > 160 ? 0.6 : items.length > 80 ? 1.2 : 3
+
+  items.forEach((label, index) => {
+    const start = -Math.PI / 2 + index * segment
+    const end = start + segment
+    const color = COLORS[index % COLORS.length]!
+
+    ctx.beginPath()
+    ctx.moveTo(cx, cy)
+    ctx.arc(cx, cy, radius, start, end)
+    ctx.closePath()
+    ctx.fillStyle = color
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(255,255,255,0.82)'
+    ctx.lineWidth = lineWidth
+    ctx.stroke()
+
+    if (index % labelStep !== 0) return
+
+    const mid = start + segment / 2
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.rotate(mid)
+    ctx.font = `800 ${fontSize}px system-ui, sans-serif`
+    ctx.fillStyle = labelColor(color)
+    ctx.textBaseline = 'middle'
+    const text = fitLabel(ctx, label, maxLabelWidth)
+    if (Math.cos(mid) < 0) {
+      ctx.rotate(Math.PI)
+      ctx.textAlign = 'left'
+      ctx.fillText(text, -(radius - 30), 0)
+    } else {
+      ctx.textAlign = 'right'
+      ctx.fillText(text, radius - 30, 0)
+    }
+    ctx.restore()
+  })
+
+  wheelCache = cache
 }
 
 function draw() {
@@ -70,50 +134,17 @@ function draw() {
     ctx.fill()
   }
 
-  const items = entries.value
-  if (!items.length) {
+  if (!entries.value.length) {
     ctx.beginPath()
     ctx.arc(cx, cy, radius, 0, Math.PI * 2)
     ctx.fillStyle = '#e4e4e7'
     ctx.fill()
-  } else {
-    const segment = (Math.PI * 2) / items.length
-    const fontSize = Math.min(52, Math.max(22, 64 - items.length * 1.4))
-    const maxLabelWidth = radius - 100
-
-    items.forEach((label, index) => {
-      const start = -Math.PI / 2 + rotation.value + index * segment
-      const end = start + segment
-      const color = COLORS[index % COLORS.length]!
-
-      ctx.beginPath()
-      ctx.moveTo(cx, cy)
-      ctx.arc(cx, cy, radius, start, end)
-      ctx.closePath()
-      ctx.fillStyle = color
-      ctx.fill()
-      ctx.strokeStyle = 'rgba(255,255,255,0.82)'
-      ctx.lineWidth = 3
-      ctx.stroke()
-
-      const mid = start + segment / 2
-      ctx.save()
-      ctx.translate(cx, cy)
-      ctx.rotate(mid)
-      ctx.font = `800 ${fontSize}px system-ui, sans-serif`
-      ctx.fillStyle = labelColor(color)
-      ctx.textBaseline = 'middle'
-      const text = fitLabel(ctx, label, maxLabelWidth)
-      if (Math.cos(mid) < 0) {
-        ctx.rotate(Math.PI)
-        ctx.textAlign = 'left'
-        ctx.fillText(text, -(radius - 30), 0)
-      } else {
-        ctx.textAlign = 'right'
-        ctx.fillText(text, radius - 30, 0)
-      }
-      ctx.restore()
-    })
+  } else if (wheelCache) {
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.rotate(rotation.value)
+    ctx.drawImage(wheelCache, -cx, -cy)
+    ctx.restore()
   }
 
   // Centre hub
@@ -243,7 +274,10 @@ watch(entriesText, value => {
   result.value = ''
   error.value = ''
   rotation.value = 0
-  nextTick(draw)
+  nextTick(() => {
+    buildWheelCache()
+    draw()
+  })
 })
 
 watch(expanded, value => {
@@ -263,6 +297,7 @@ onMounted(() => {
   }
   window.addEventListener('keydown', onKeydown)
   document.addEventListener('fullscreenchange', onFullscreenChange)
+  buildWheelCache()
   draw()
 })
 
@@ -340,6 +375,7 @@ onBeforeUnmount(() => {
           <span class="tool-hint">{{ t('wheel.count', { count: entries.length }) }}</span>
         </div>
         <p class="tool-hint">{{ t('wheel.hint') }}</p>
+        <p v-if="entries.length > 40" class="tool-hint">{{ t('wheel.dense') }}</p>
         <p class="tool-hint">{{ t('wheel.cached') }}</p>
       </div>
     </div>
