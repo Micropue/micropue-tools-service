@@ -9,7 +9,8 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: 'Small, sharp tools for everyday work.' },
         { name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' },
-        { name: 'theme-color', content: '#18181b', media: '(prefers-color-scheme: dark)' }
+        { name: 'theme-color', content: '#18181b', media: '(prefers-color-scheme: dark)' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover' },
       ],
       link: [
         { rel: 'icon', href: '/favicon.ico', sizes: 'any' },

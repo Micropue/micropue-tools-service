@@ -500,14 +500,18 @@ useHead(() => ({
 
 .sidebar-close {
   display: none;
+  flex: none;
   place-items: center;
+  box-sizing: border-box;
   width: 34px;
   height: 34px;
+  padding: 0;
   border: 1px solid color-mix(in srgb, var(--p-text-color) 16%, transparent);
   border-radius: 8px;
   background: transparent;
   color: var(--p-text-color);
   font: inherit;
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -662,7 +666,7 @@ useHead(() => ({
     z-index: 60;
     width: min(330px, 86vw);
     height: 100svh;
-    padding: 14px 16px 32px;
+    padding: 0 16px 32px;
     background: var(--p-content-background, #fff);
     border-right: 1px solid color-mix(in srgb, var(--p-text-color) 12%, transparent);
     box-shadow: 24px 0 70px -48px rgba(0, 0, 0, 0.65);
@@ -682,8 +686,8 @@ useHead(() => ({
     top: 0;
     z-index: 2;
     margin: 0 0 1rem;
-    padding: 2px 0;
-    background: color-mix(in srgb, var(--p-content-background, #fff) 94%, transparent);
+    padding: 14px 0 10px 0.5rem;
+    background: var(--p-content-background, #fff);
     backdrop-filter: blur(10px);
   }
 
