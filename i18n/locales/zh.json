@@ -255,7 +255,8 @@
     "password-generator": "密码生成器",
     "password-strength": "密码强度",
     "random-string": "随机字符串",
-    "token-generator": "随机令牌"
+    "token-generator": "随机令牌",
+    "wheel-lottery": "大转盘抽奖"
   },
   "toolDescriptions": {
     "case-converter": "大写、小写、标题格式和句首大写，实时转换。",
@@ -364,6 +365,24 @@
     "password-generator": "使用安全随机数生成可配置密码。",
     "password-strength": "本地估算强度，不上传密码。",
     "random-string": "自定义字符集和长度，可选安全随机数。",
-    "token-generator": "生成一次性本地随机令牌，不提供认证服务。"
+    "token-generator": "生成一次性本地随机令牌，不提供认证服务。",
+    "wheel-lottery": "一行一个内容，转动彩色转盘随机抽取一项。"
+  },
+  "wheel": {
+    "entries": "抽奖内容",
+    "placeholder": "一行一个内容",
+    "hint": "建议 2–24 项，每次随机抽取一项。",
+    "spin": "开始抽奖",
+    "spinning": "抽取中…",
+    "result": "中奖结果",
+    "reset": "重置",
+    "count": "{count} 个内容",
+    "empty": "至少添加 2 个内容才能抽奖。",
+    "tooMany": "最多支持 24 个内容。",
+    "emptyShort": "添加内容",
+    "pick": "使用 crypto.getRandomValues 在本地随机抽取。",
+    "fullscreen": "全屏",
+    "exitFullscreen": "退出全屏",
+    "cached": "内容会自动保存在本机浏览器中。"
   }
 }

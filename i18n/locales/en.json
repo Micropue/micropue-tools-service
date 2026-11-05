@@ -93,5 +93,22 @@
   "home": {
     "tagline1": "Small, sharp tools for everyday work.",
     "tagline2": "Built by MICROPUE, free to use."
+  },
+  "wheel": {
+    "entries": "Entries",
+    "placeholder": "One entry per line",
+    "hint": "2–24 entries recommended. Each spin picks one entry at random.",
+    "spin": "Spin",
+    "spinning": "Spinning…",
+    "result": "Winner",
+    "reset": "Reset",
+    "count": "{count} entries",
+    "empty": "Add at least 2 entries to spin.",
+    "tooMany": "Up to 24 entries are supported.",
+    "emptyShort": "Add entries",
+    "pick": "The winner is selected locally with crypto.getRandomValues.",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "cached": "Entries are saved in this browser."
   }
 }

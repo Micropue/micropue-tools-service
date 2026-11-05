@@ -97,6 +97,7 @@ export const tools: Tool[] = [
   { slug: 'variance', name: 'Variance & Std Dev', description: 'Population and sample variance and standard deviation.', component: 'Variance', category: '05' },
   { slug: 'random-number', name: 'Random Number', description: 'Generate numbers in a range, with or without repeats.', component: 'RandomNumber', category: '05' },
   { slug: 'lottery', name: 'Random Picker', description: 'Pick one or more entries from a list.', component: 'Lottery', category: '05' },
+  { slug: 'wheel-lottery', name: 'Wheel of Fortune', description: 'One entry per line; spin a colorful wheel to pick a winner.', component: 'WheelOfFortune', category: '05' },
 
   // 06 QR & Barcode
   { slug: 'qr-generator', name: 'QR Code Generator', description: 'Create QR codes for text and URLs locally.', component: 'QrGenerator', category: '06' },

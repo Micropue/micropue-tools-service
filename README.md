@@ -20,11 +20,11 @@
 - **首页**：FlexCarousel 照片背景（自动轮播、随机图、鼠标跟随透镜）+ 左下角 TOOLS 文案（SplitText `mask: "words"` 逐词升起）+ 字体就绪前的全屏加载蒙层。
 - **性能模式**：开关写入 cookie `micropue-perf`，关闭后卸载照片墙（释放 WebGL），刷新保持。
 - **多语言**：`/` 默认英文，`/zh`、`/ja`、`/ru`；语言选择写入 cookie `micropue-locale`，再次访问 `/` 会回到上次语言。工具名称、描述和分类均已翻译。
-- **工具索引**：`/tools` 以分类卡片网格展示全部 107 个工具，支持分类筛选；`/tools/<slug>` 为具体工具页，左侧分类列表、右侧工具界面，右上角有搜索框。
+- **工具索引**：`/tools` 以分类卡片网格展示全部 108 个工具，支持分类筛选；`/tools/<slug>` 为具体工具页，左侧分类列表、右侧工具界面，右上角有搜索框。
 - **搜索**：支持按 `/` 或点击搜索框内的斜杠图标聚焦；搜索会同时匹配中、英、日、俄四种语言的工具名称和描述。
-- **已实现工具**：文本、开发、图片、单位转换、数学、二维码/条码、文件、浏览器、时间、设计、安全共 107 个，全部在浏览器本地运行。图片/二维码/文件类使用 Canvas、Web Crypto、jsQR、JsBarcode、fflate、exifr 等浏览器端库。
+- **已实现工具**：文本、开发、图片、单位转换、数学、二维码/条码、文件、浏览器、时间、设计、安全共 108 个，全部在浏览器本地运行。图片/二维码/文件类使用 Canvas、Web Crypto、jsQR、JsBarcode、fflate、exifr 等浏览器端库。
 - **国际化的工具文案**：四个语言文件都包含 `categories`、`toolNames`、`toolDescriptions`；工具界面中的通用操作（复制、清空、下载、生成）走 i18n，工具专属参数标签暂为英文。
-- **SEO**：每个工具页有独立 title/description/canonical/hreflang（标题与描述按语言本地化）；`/sitemap.xml` 覆盖 4 种语言 × 109 个页面（436 条 URL），`robots.txt` 指向 sitemap。
+- **SEO**：每个工具页有独立 title/description/canonical/hreflang（标题与描述按语言本地化）；`/sitemap.xml` 覆盖 4 种语言 × 110 个页面（440 条 URL），`robots.txt` 指向 sitemap。
 - **错误页**：`app/error.vue` 统一处理所有 HTTP 错误码。
 - **黑白主题**：`app/assets/themes/noir.ts`，跟随系统深浅色。
 
@@ -38,7 +38,7 @@ app/
   pages/index.vue             # 首页（照片墙背景 + TOOLS 文案）
   pages/tools/[[slug]].vue    # 工具页（左列表 + 右使用区）
   components/
-    tools/                    # 107 个工具界面 + 共享控件（QrCanvas、UnitConverter 等）
+    tools/                    # 108 个工具界面 + 共享控件（QrCanvas、UnitConverter 等）
     FlexCarousel.vue          # 照片墙（Vue Bits 组件，Tailwind 已改为本地 CSS）
     RippleDistortion.vue      # 水波纹（当前未使用，保留）
     ToolStack.client.vue      # 工具卡片栈（当前未使用，保留）

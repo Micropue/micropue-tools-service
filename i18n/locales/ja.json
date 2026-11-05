@@ -200,7 +200,8 @@
     "password-generator": "パスワード生成",
     "password-strength": "パスワード強度",
     "random-string": "ランダム文字列",
-    "token-generator": "ランダムトークン"
+    "token-generator": "ランダムトークン",
+    "wheel-lottery": "ルーレット抽選"
   },
   "toolDescriptions": {
     "case-converter": "大文字、小文字、タイトルケース、文頭大文字にリアルタイム変換。",
@@ -309,6 +310,24 @@
     "password-generator": "安全な乱数で設定可能なパスワードを生成。",
     "password-strength": "パスワード強度をローカルで推定。送信しません。",
     "random-string": "文字セットと長さを指定。安全な乱数にも対応。",
-    "token-generator": "ローカルで一度限りのランダムトークンを生成。認証サービスではありません。"
+    "token-generator": "ローカルで一度限りのランダムトークンを生成。認証サービスではありません。",
+    "wheel-lottery": "1行に1項目。カラフルなルーレットを回してランダムに選びます。"
+  },
+  "wheel": {
+    "entries": "抽選内容",
+    "placeholder": "1行に1項目",
+    "hint": "2〜24 項目を推奨。回すたびに1項目をランダムに選びます。",
+    "spin": "スタート",
+    "spinning": "回転中…",
+    "result": "当選結果",
+    "reset": "リセット",
+    "count": "{count} 項目",
+    "empty": "2 項目以上入力してください。",
+    "tooMany": "最大 24 項目まで対応しています。",
+    "emptyShort": "項目を追加",
+    "pick": "crypto.getRandomValues でローカル抽選します。",
+    "fullscreen": "全画面",
+    "exitFullscreen": "全画面を終了",
+    "cached": "内容はこのブラウザに保存されます。"
   }
 }
