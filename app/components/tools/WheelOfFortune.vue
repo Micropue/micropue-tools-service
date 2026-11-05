@@ -63,11 +63,15 @@ function buildWheelCache() {
   const cy = SIZE / 2
   const radius = SIZE * 0.43
   const segment = (Math.PI * 2) / items.length
-  const fontSize = items.length <= 40
+  const fontSize = items.length <= 24
     ? Math.min(52, Math.max(30, 64 - items.length * 1.4))
-    : 28
-  const maxLabelWidth = radius - 100
-  const labelStep = items.length <= 40 ? 1 : Math.ceil(items.length / 24)
+    : items.length <= 60
+      ? Math.max(16, Math.round(32 - (items.length - 24) * 0.45))
+      : Math.max(16, Math.round(22 - (items.length - 60) * 0.012))
+  const labelStep = items.length <= 60 ? 1 : Math.ceil(items.length / 24)
+  const displayedLabels = items.length / labelStep
+  const innerRadius = Math.max(70, (fontSize * 1.25 * displayedLabels) / (Math.PI * 2))
+  const maxLabelWidth = Math.max(90, radius - 30 - innerRadius)
   const lineWidth = items.length > 160 ? 0.6 : items.length > 80 ? 1.2 : 3
 
   items.forEach((label, index) => {
@@ -375,7 +379,7 @@ onBeforeUnmount(() => {
           <span class="tool-hint">{{ t('wheel.count', { count: entries.length }) }}</span>
         </div>
         <p class="tool-hint">{{ t('wheel.hint') }}</p>
-        <p v-if="entries.length > 40" class="tool-hint">{{ t('wheel.dense') }}</p>
+        <p v-if="entries.length > 60" class="tool-hint">{{ t('wheel.dense') }}</p>
         <p class="tool-hint">{{ t('wheel.cached') }}</p>
       </div>
     </div>
